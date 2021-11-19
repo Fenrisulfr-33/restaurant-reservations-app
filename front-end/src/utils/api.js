@@ -32,22 +32,24 @@ headers.append("Content-Type", "application/json");
 async function fetchJson(url, options, onCancel) {
   try {
     const response = await fetch(url, options);
-
+    // checking for successful response
     if (response.status === 204) {
       return null;
     }
-
+    // because its successful we can format it in json, versus like media
     const payload = await response.json();
-
+    // send the error from the backaend
     if (payload.error) {
       return Promise.reject({ message: payload.error });
     }
+    // returns data key
     return payload.data;
   } catch (error) {
     if (error.name !== "AbortError") {
       console.error(error.stack);
       throw error;
     }
+    // the data we were suppose to send gets canceled mid flight
     return Promise.resolve(onCancel);
   }
 }
@@ -66,4 +68,23 @@ export async function listReservations(params, signal) {
   return await fetchJson(url, { headers, signal }, [])
     .then(formatReservationDate)
     .then(formatReservationTime);
+}
+/**
+ * Create a reservation and send it to the server
+ * @param {reservation} 
+ *  obj containing the formData
+ * @param {signal} 
+ *  a signal for if the user cancels the request
+ * @returns 
+ *  a promise that comes back resolved or with an error
+ */
+export async function createReservation(reservation, signal) { 
+  const url = `${API_BASE_URL}/reservations`; 
+  const options = { 
+    method: "POST", 
+    headers, 
+    body: JSON.stringify({ data: reservation }), 
+    signal, 
+  }; 
+  return await fetchJson(url, options, reservation);
 }
