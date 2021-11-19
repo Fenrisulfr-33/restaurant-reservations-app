@@ -3,8 +3,6 @@ const service = require("./reservations.service");
 
 /* Middleware functions */
 
-
-
 /**
  * Verifies wether or not the new dish has all the correct information inputted into the form
  * @returns an error message for an incorrect property 
@@ -18,8 +16,7 @@ const service = require("./reservations.service");
     reservation_date,
     reservation_time,
     people,
-  }
-
+  };
   // all feilds must meet strict requirements
   if (!data.first_name || data.first_name === "") {
     next({
@@ -79,27 +76,27 @@ const service = require("./reservations.service");
   const format = data.reservation_date + ' ' + data.reservation_time;
   const formatDate = new Date(format);
   // format arguments from the request date and time
-  const reqTime = formatDate.getTime(), reqDay = formatDate.getDay(), reqMonth = formatDate.getMonth(), reqYear = formatDate.getFullYear(); 
+  const reqTime = formatDate.getTime(), reqDate = formatDate.getDate(), reqMonth = formatDate.getMonth(), reqYear = formatDate.getFullYear(); 
   const today = new Date();
   // format arguments from todays date and time
-  const nowTime = today.getTime(), nowDay = today.getDay(), nowMonth = today.getMonth(), nowYear = today.getFullYear();
+  const nowTime = today.getTime(), nowDate = today.getDate(), nowMonth = today.getMonth(), nowYear = today.getFullYear();
   // check to see if the date is in the past
   if (reqYear < nowYear) {
     next({
       status: 400,
       message: `The year you are trying to make a reservation in is in the past`
     });
-  } else if ((reqYear === nowYear) && (reqMonth < nowMonth)) {
+  } else if ((reqYear >= nowYear) && (reqMonth < nowMonth)) {
     next({
       status: 400,
       message: `The month you are trying to make a reservation in is in the past`
     });
-  } else if ((reqYear === nowYear) && (reqMonth === nowMonth) && (reqDay < nowDay)) {
+  } else if ((reqYear >= nowYear) && (reqMonth >= nowMonth) && (reqDate < nowDate)) {
     next({
       status: 400,
       message: `The day you are trying to make a reservation in is in the past`
     });
-  } else if ((reqYear === nowYear) && (reqMonth === nowMonth) && (reqDay === nowDay) && (reqTime < nowTime)) {
+  } else if ((reqYear >= nowYear) && (reqMonth >= nowMonth) && (reqDate >= nowDate) && (reqTime < nowTime)) {
     next({
       status: 400,
       message: `The time you are trying to make a reservation in is in the past`
@@ -111,6 +108,25 @@ const service = require("./reservations.service");
     next({
       status: 400,
       message: `You cannot make a reservation on a Tuesday`
+    });
+  }
+  next();
+}
+
+/**
+ * 
+ * @returns
+ *  an error message if the future reservation is not within hours of operation
+ */
+function checkTime(request, response, next){
+  const data = response.locals.data;
+  const format = data.reservation_date + ' ' + data.reservation_time;
+  const formatDate = new Date(format);
+  const getHours = formatDate.getHours(), getMins = formatDate.getMinutes();
+  if ((getHours <= 10 && getMins < 30) || (getHours >= 21 && getMins > 30)){
+    next({
+      status: 400,
+      message: `You cannot make a reservation on a before 10:30AM or after 9:30PM`
     });
   }
 
@@ -151,6 +167,6 @@ async function list(request, response) {
 }
 
 module.exports = {
-  create: [asyncErrorBoundary(createReservationRequirements), asyncErrorBoundary(checkDatePast), asyncErrorBoundary(create)],
+  create: [asyncErrorBoundary(createReservationRequirements), asyncErrorBoundary(checkDatePast), asyncErrorBoundary(checkTime), asyncErrorBoundary(create)],
   list: [asyncErrorBoundary(list)],
 };
