@@ -1,28 +1,53 @@
 const knex = require("../db/connection");
 
 /**
- * 
- * @param newReservation 
+ * Create function
+ *  creates a new reservation
+ * @param {newReservation} 
  *  the new reservation data
  * @returns {Promise<Error/any>}}
  *  a promise that resolve to the `json` data or an error
  */
 function create(newReservation) {
   return knex("reservations")
-    .insert(newReservation)
-    .returning("*");
+    .insert(newReservation, '*')
+    .then(data => data[0]);
 }
+
 /**
- * 
- * @returns {json data}
- *  a data object with all reservations
+ * Read function
+ *  finds a specific reservation
+ * @param {reservation_id} 
+ *  the reservation id number
+ * @returns {Promise<Error/any>}}
+ *  a promise that resolve to the `json` data or an error
  */
-function list(){
+function read(reservation_id) {
   return knex('reservations')
-    .select('*');
+      .where({ reservation_id: reservation_id})
+      .first();
+}
+
+/**
+ * List function
+ *  lists all reservations by a specific date
+ * @param {date} 
+ *  the current date
+ * @returns {Promise<Error/any>}}
+ *  a promise that resolve to the `json` data or an error
+ */
+function list(date){
+  if (date) {
+    return knex('reservations')
+      .where({ reservation_date: date})
+      .orderBy('reservation_time');
+  }
+  return knex('reservations');
+
 }
 
 module.exports = {
   create,
+  read,
   list,
 };

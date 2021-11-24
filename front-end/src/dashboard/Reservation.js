@@ -6,7 +6,6 @@
  *  a row with the reservation data
  */
 function Reservation({ data: { reservation_id, first_name, last_name, mobile_number, reservation_date, reservation_time, people } }) {
-
     return (
         <tr>
             <td>{reservation_id}</td>
@@ -16,6 +15,10 @@ function Reservation({ data: { reservation_id, first_name, last_name, mobile_num
             <td>{reservation_date}</td>
             <td>{reservation_time}</td>
             <td>{people}</td>
+            <a class="btn btn-secondary"
+            href={`/reservations/${reservation_id}/seat`}>
+                Seat
+            </a>
         </tr>
     )
 }

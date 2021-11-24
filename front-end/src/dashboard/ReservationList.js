@@ -14,7 +14,7 @@ function ReservationList({ reservations, date }) {
     const listByDate = findDate.map((obj) => <Reservation key={obj.reservation_id} data={obj} />);
     // table with the rows being the map
     return (
-        <table>
+        <table className='table'>
             <thead>
                 <tr>
                     <td>ID</td>
@@ -24,6 +24,7 @@ function ReservationList({ reservations, date }) {
                     <td>Reservation Date</td>
                     <td>Reservation Time</td>
                     <td>People</td>
+                    <td>Seat</td>
                 </tr>
             </thead> 
             <tbody>

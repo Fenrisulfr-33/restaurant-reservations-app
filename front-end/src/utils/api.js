@@ -69,6 +69,7 @@ export async function listReservations(params, signal) {
     .then(formatReservationDate)
     .then(formatReservationTime);
 }
+
 /**
  * Create a reservation and send it to the server
  * @param {reservation} 
@@ -87,4 +88,58 @@ export async function createReservation(reservation, signal) {
     signal, 
   }; 
   return await fetchJson(url, options, reservation);
+}
+
+/**
+ * List all tables in the db
+ * @param {signal} 
+ *  a signal for if the user cancels the request
+ * @returns 
+ *  a promise that comes back resolved or with an error
+ */
+ export async function listTables(signal) {
+  const url = new URL(`${API_BASE_URL}/tables`);
+  return await fetchJson(url, { signal }, []);
+}
+
+/**
+ * Create a table and send it to the server
+ * @param {table} 
+ *  obj containing the formData
+ * @param {signal} 
+ *  a signal for if the user cancels the request
+ * @returns 
+ *  a promise that comes back resolved or with an error
+ */
+ export async function createTable(table, signal) { 
+  const url = new URL(`${API_BASE_URL}/tables`); 
+  const options = { 
+    method: "POST", 
+    headers, 
+    body: JSON.stringify({ data: table }), 
+    signal, 
+  }; 
+  return await fetchJson(url, options, table);
+}
+
+/**
+ * updates a table to be occupied and send it to the server
+ * @param {table_id} 
+ *  the table id to update
+ * @param {reservation_id}
+ *  the reservation_id to fill in
+ * @param {signal} 
+ *  a signal for if the user cancels the request
+ * @returns 
+ *  a promise that comes back resolved or with an error
+ */
+ export async function updateTable(table_id, reservation_id, signal) { 
+  const url = new URL(`${API_BASE_URL}/tables/${table_id}/seat`); 
+  const options = { 
+    method: "PUT", 
+    headers, 
+    body: JSON.stringify({ data: reservation_id }), 
+    signal,
+  }; 
+  return await fetchJson(url, options, {});
 }
