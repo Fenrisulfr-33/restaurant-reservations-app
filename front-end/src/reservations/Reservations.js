@@ -40,11 +40,12 @@ function Reservations() {
     const cancelHandler = () => {
         history.goBack();
     }
-    // on submit retunr the user to the dashboard and shows their reservations
+    // on submit return the user to the dashboard and shows their reservations
     const submitHandler = async (event) => {
         event.preventDefault();
         const ac = new AbortController();
         try {
+            formData.people = Number(formData.people);
             await createReservation(formData, ac.signal);
             history.push(`/dashboard?date=${formData.reservation_date}`);
         } catch (error) {
@@ -111,6 +112,7 @@ function Reservations() {
                             <input 
                                 id='people'
                                 name="people"
+                                type='number'
                                 value={formData.people}
                                 onChange={changeHandler} 
                             />

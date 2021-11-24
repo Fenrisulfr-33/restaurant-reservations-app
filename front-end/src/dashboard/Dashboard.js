@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
-import { listReservations } from "../utils/api";
+import { listReservations, listTables } from "../utils/api";
 import { next, previous, today } from '../utils/date-time'
 import ErrorAlert from "../layout/ErrorAlert";
 import ReservationList from "./ReservationList";
-
+import TablesList from "./TablesList";
 
 /**
  * Defines the dashboard page.
@@ -13,18 +13,22 @@ import ReservationList from "./ReservationList";
  * @returns {JSX.Element}
  */
 function Dashboard({ date }) {
-  console.log(date);
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
-
+  const [tables, setTables] = useState([]);
+  const [tablesError, setTablesError] = useState(null);
+  // load the dashboard
   useEffect(loadDashboard, [date]);
-
+  // get the list of reservations for the day and tables list
   function loadDashboard() {
     const abortController = new AbortController();
     setReservationsError(null);
     listReservations({ date }, abortController.signal)
       .then(setReservations)
       .catch(setReservationsError);
+    listTables(abortController.signal)
+    .then(setTables)
+    .catch(setTablesError);
     return () => abortController.abort();
   }
 
@@ -47,6 +51,7 @@ function Dashboard({ date }) {
         </Link>
       </nav>
       <ReservationList reservations={reservations} date={date}/>
+      <TablesList tables={tables} />
     </main>
   );
 }
