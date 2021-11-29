@@ -47,6 +47,18 @@ function update(table_id, reservation_id) {
 }
 
 /**
+ * Delete function
+ *  replaces reservation on table to null
+ * @returns {Promise<Error/any>}}
+ *  a promise that resolve to the `json` data or an error
+ */
+ function destroy(table_id){
+    return knex('tables')
+        .where({ 'table_id': table_id })
+        .update({ 'reservation_id': null });
+}
+
+/**
  * List function
  *  list of all tables by table name
  * @returns {Promise<Error/any>}}
@@ -61,5 +73,6 @@ module.exports = {
     create,
     read,
     update,
+    delete: destroy,
     list,
 };

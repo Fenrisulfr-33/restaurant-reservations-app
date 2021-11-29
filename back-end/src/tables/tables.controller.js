@@ -86,6 +86,14 @@ async function validateUpdate(request, response, next) {
     next();
 }
 
+async function isNotOccupied(request, response, next) {
+    const table = response.locals.table;
+    if (!table.reservation_id) {
+        next({ status: 400, message: `Table is not occupied` });
+    }
+    next();
+}
+
 /* CRUDL functions */
 
 /**
@@ -136,6 +144,22 @@ async function update(request, response) {
 }
 
 /**
+ * Destroy function
+ *  sets reservations back to null 
+ * @param {request}
+ *  request from client
+ * @param {response}
+ *  response from the server  
+ * @returns {JSON}
+ *  a deleted status
+ */
+ async function destroy(request, response) {
+    const { table_id } = response.locals.table;
+    await tablesService.delete(table_id);
+    response.sendStatus(200);
+}
+
+/**
  * List function
  *  lists the tables in order of table name 
  * @param {request}
@@ -154,6 +178,7 @@ module.exports = {
     create: [createTableRequirements, asyncErrorBoundary(create)],
     read: [asyncErrorBoundary(tableExists), asyncErrorBoundary(read)],
     update: [asyncErrorBoundary(tableExists), asyncErrorBoundary(validateUpdate), asyncErrorBoundary(update)],
+    finish: [asyncErrorBoundary(tableExists), asyncErrorBoundary(isNotOccupied),asyncErrorBoundary(destroy)],
     list: [asyncErrorBoundary(list)],
 };
 
