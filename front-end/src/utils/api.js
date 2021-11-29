@@ -143,3 +143,18 @@ export async function createReservation(reservation, signal) {
   }; 
   return await fetchJson(url, options, {});
 }
+
+/**
+ * deletes the reservation number from the table
+ * @param {table_id} 
+ *  the table id to update
+ * @param {signal} 
+ *  a signal for if the user cancels the request
+ * @returns 
+ *  a promise that comes back resolved or with an error
+ */
+ export async function deleteReservation(table_id, signal) { 
+  const url = new URL(`${API_BASE_URL}/tables/${table_id}/seat`); 
+  const options = { method: "DELETE", signal }; 
+  return await fetchJson(url, options);
+}

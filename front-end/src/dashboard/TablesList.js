@@ -7,9 +7,10 @@ import Table from "./Table"
  * @returns {JSX.Element}
  *  a table with a list of rows
  */
-function TablesList({ tables }) {
+function TablesList({ tables, finish }) {
+
     // list out all tables
-    const list = tables.map((obj) => <Table key={obj.table_name} table={obj} />);
+    const list = tables.map((obj) => <Table key={obj.table_name} table={obj} finish={finish} />);
 
     return (
         <table className='table'>
@@ -19,6 +20,7 @@ function TablesList({ tables }) {
                     <td>Table name</td>
                     <td>Capacity</td>
                     <td>Occupied?</td>
+                    <td>Finish</td>
                 </tr>
             </thead> 
             <tbody>
