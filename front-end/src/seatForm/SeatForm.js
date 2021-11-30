@@ -5,7 +5,7 @@ import { listTables, updateReservation, updateTable } from "../utils/api";
 import TablesDropDown from "./TablesDropDown";
 import ErrorAlert from '../layout/ErrorAlert';
 
-function SeatForm() {
+export default function SeatForm() {
     const history = useHistory();
     // set the tables list
     const [tables, setTables] = useState([]);
@@ -75,5 +75,3 @@ function SeatForm() {
         </>
     )
 }
-
-export default SeatForm

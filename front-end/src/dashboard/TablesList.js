@@ -7,20 +7,19 @@ import Table from "./Table"
  * @returns {JSX.Element}
  *  a table with a list of rows
  */
-function TablesList({ tables, finish }) {
-
+ export default function TablesList({ tables, finish }) {
     // list out all tables
     const list = tables.map((obj) => <Table key={obj.table_name} table={obj} finish={finish} />);
 
     return (
-        <table className='table'>
+        <table className='table table-hover'>
             <thead>
                 <tr>
-                    <td>Table id</td>
-                    <td>Table name</td>
-                    <td>Capacity</td>
-                    <td>Occupied?</td>
-                    <td>Finish</td>
+                    <th scope='col'>Table id</th>
+                    <th scope='col'>Table name</th>
+                    <th scope='col'>Capacity</th>
+                    <th scope='col'>Occupied?</th>
+                    <th scope='col'>Finish</th>
                 </tr>
             </thead> 
             <tbody>
@@ -29,5 +28,3 @@ function TablesList({ tables, finish }) {
         </table>
     )
 }
-
-export default TablesList

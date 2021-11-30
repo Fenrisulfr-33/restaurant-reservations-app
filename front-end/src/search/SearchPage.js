@@ -4,7 +4,6 @@ import { listReservations } from '../utils/api';
 import ErrorAlert from "../layout/ErrorAlert";
 
 export default function SearchPage() {
-
     const [reservations, setReservations] = useState([]);
     const [reservationsError, setReservationsError] = useState(null);
     const [mobile, setMobile] = useState('');
@@ -28,10 +27,6 @@ export default function SearchPage() {
         console.log(reservations.length);
 	}
 
-    // const handleSubmit = (event) => {
-    //     event.preventDefault();
-    //     console.log(reservations.length);
-    // }
     const handleSubmit = async (event) => {
         event.preventDefault();
         const ac = new AbortController();
@@ -48,23 +43,24 @@ export default function SearchPage() {
     }
 
     return (
-        <>
-        <div className="navbar navbar-light bg-light">
-            <div className="container-fluid">
-                <form onSubmit={handleSubmit} className="d-flex" >
-                <input className="form-control me-2" 
-                    name='mobile_number'
-                    type="search" 
-                    placeholder="Enter a customer's phone number" 
-                    aria-label="Enter a customer's phone number" 
-                    onChange={handleChange}/>
-                <button className="btn btn-outline-success" type="submit">Find</button>
-                </form>
+        <main>
+            <h1>Find a reservation by phone number</h1>
+            <div className="navbar navbar-light bg-light">
+                <div className="container-fluid">
+                    <form onSubmit={handleSubmit} className="d-flex" >
+                    <input className="form-control me-2" 
+                        name='mobile_number'
+                        type="search" 
+                        placeholder="Enter a customer's phone number" 
+                        aria-label="Enter a customer's phone number" 
+                        onChange={handleChange}/>
+                    <button className="btn btn-outline-success" type="submit">Find</button>
+                    </form>
+                </div>
             </div>
-        </div>
-        <ErrorAlert error={reservationsError} />
-        <div>{mobile ? <ReservationList reservations={reservations} /> : ('')}</div>
-        <div>{notFound ? (<h4>No reservations found</h4>) : ('')}</div>
-        </>
+            <ErrorAlert error={reservationsError} />
+            <div>{mobile ? <ReservationList reservations={reservations} /> : ('')}</div>
+            <div>{notFound ? (<h4>No reservations found</h4>) : ('')}</div>
+        </main>
     )
 }

@@ -20,18 +20,18 @@ function ReservationList({ reservations, date }) {
     }
     // table with the rows being the map
     return (
-        <table className='table'>
+        <table className='table table-hover'>
             <thead>
                 <tr>
-                    <td>ID</td>
-                    <td>First name</td>
-                    <td>Last name</td>
-                    <td>Mobile number</td>
-                    <td>Reservation Date</td>
-                    <td>Reservation Time</td>
-                    <td>People</td>
-                    <td>Status</td>
-                    <td>Seat</td>
+                    <th scope='col'>ID</th>
+                    <th scope='col'>First name</th>
+                    <th scope='col'>Last name</th>
+                    <th scope='col'>Mobile number</th>
+                    <th scope='col'>Reservation Date</th>
+                    <th scope='col'>Reservation Time</th>
+                    <th scope='col'>People</th>
+                    <th scope='col'>Status</th>
+                    <th scope='col'>Seat</th>
                 </tr>
             </thead> 
             <tbody>

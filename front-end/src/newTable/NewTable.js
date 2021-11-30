@@ -13,7 +13,7 @@ import ErrorAlert from '../layout/ErrorAlert';
  *  the date for which the user wants to view reservations.
  * @returns {JSX.Element}
  */
-function Tables() {
+export default function NewTable() {
     // grab the users history
     const history = useHistory();
     // handle errors from the backend
@@ -50,37 +50,36 @@ function Tables() {
     }
     return (
         <main>
-            <h1>Tables</h1>
+            <h1>Create a new table</h1>
             <ErrorAlert error={error} />
-            <div className="d-md-flex mb-3 bg-secondary">
-                <h4 className="mb-0">Table name and capacity</h4>
-                <div className='bg-dark'>
+            <div className="d-md-flex mb-3">
+                <div className=''>
                     <form onSubmit={submitHandler}>
-                        <label> Table name:
-                            <input
-                                name="table_name"
-                                required
-                                minLength={2}
-                                value={formData.table_name}
-                                onChange={changeHandler}
-                            />
-                        </label>
-                        <label> Capacity:
-                            <input 
-                                type='number'
-                                name="capacity"
-                                required
-                                value={formData.capacity}
-                                onChange={changeHandler} 
-                            />
-                        </label>
+                        <label className='form-label mt-2'>Table name:</label>
+                        <input
+                            name="table_name"
+                            required
+                            minLength={2}
+                            value={formData.table_name}
+                            onChange={changeHandler}
+                            className='form-control'
+                        />
+                        <label className='form-label mt-2'>Capacity:</label>
+                        <input 
+                            type='number'
+                            name="capacity"
+                            required
+                            value={formData.capacity}
+                            onChange={changeHandler} 
+                            className='form-control'
+                        />
                         <button
                             type="submit"
-                            className="btn btn-primary mr-2"
+                            className="btn btn-primary mt-4"
                         >Submit</button>
                         <button
                             type="button"
-                            className="btn btn-secondary mr-2"
+                            className="btn btn-secondary mt-4 ml-2"
                             onClick={cancelHandler}
                         >Cancel</button>
                     </form>
@@ -89,5 +88,3 @@ function Tables() {
         </main>
     );
 }
-
-export default Tables;
