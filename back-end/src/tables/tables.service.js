@@ -24,7 +24,7 @@ function create(newTable) {
  */
 function read(table_id) {
     return knex('tables')
-        .where('table_id', table_id)
+        .where({'table_id': table_id})
         .first();
 }
 
@@ -41,8 +41,8 @@ function read(table_id) {
 function update(table_id, reservation_id) {
     return knex('tables')
         .select('*')
-        .where({ table_id })
-        .update({ reservation_id })
+        .where({'table_id': table_id })
+        .update({'reservation_id': reservation_id })
         .then(data => data[0]);
 }
 

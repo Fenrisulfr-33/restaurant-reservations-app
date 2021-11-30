@@ -1,4 +1,4 @@
-import { deleteReservation, listTables } from "../utils/api";
+
 import { useHistory } from 'react-router-dom';
 
 /**
@@ -13,7 +13,7 @@ import { useHistory } from 'react-router-dom';
     async function handleFinish(event) {
         const result = window.confirm(`Is this table ready to seat new guests? This cannot be undone`);
         if (result) {
-            finish(table.table_id);
+            finish(table);
             history.push('/');
         }
     }

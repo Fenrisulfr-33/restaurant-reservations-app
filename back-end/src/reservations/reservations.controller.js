@@ -4,6 +4,27 @@ const reservationsService = require("./reservations.service");
 /* Middleware functions */
 
 /**
+ * Verify the status is acceptable for the db
+ * @param {request}
+ *  request from client
+ * @param {response}
+ *  response from the server  
+ * @param {next}
+ *  jump to next function, or error message
+ * @returns {Promise<Error/any>}
+ *  A reservation time
+ */
+ function statusValid(request, response, next){
+  const { status } = request.body.data;
+  const valid = ['booked', 'seated', 'finished'];
+  if (!valid.includes(status)){
+    return next({ status: 400, message: `Thet status you are requesting is unknown` });
+  }
+  next();
+}
+
+
+/**
  * Check to see if as reservation_id param shows up in the list of reservations
  * @param {request}
  *  request from client
@@ -25,6 +46,25 @@ async function reservationExists(request, response, next) {
 }
 
 /**
+ * Verifies if the status you are trying to update is already finished
+ * @param {request}
+ *  request from client
+ * @param {response}
+ *  response from the server  
+ * @param {next}
+ *  jump to next function, or error message
+ * @returns {Promise<Error/any>}
+ *  A reservation 
+ */
+ function updateFinished(request, response, next){
+  const { status } = response.locals.reservation;
+  if (status === 'finished'){
+    next({ status: 400, message: `Cannot update a finished reservation` });
+  }
+  next();
+}
+
+/**
  * Verify all request object variables satify all the restaurants requirments
  * @param {request}
  *  request from client
@@ -36,7 +76,7 @@ async function reservationExists(request, response, next) {
  *  a reservation object in locals with proper values
  */
 function createReservationRequirements(request, response, next){
-  const { data: { first_name, last_name, mobile_number, reservation_date, reservation_time, people } = {} } = request.body;
+  const { data: { first_name, last_name, mobile_number, reservation_date, reservation_time, people, status } = {} } = request.body;
   const time = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$/;
   if (!first_name || first_name === '') {
     next({ status: 400, message: `To submit a reservation, input a first_name.` });
@@ -50,6 +90,8 @@ function createReservationRequirements(request, response, next){
     next({ status: 400, message: `To submit a reservation, input a reservation_time.` });
   } else if (!people || typeof(people) !== typeof(0) || !Number.isInteger(people) || people === 0) {
     next({ status: 400, message: `To submit a reservation, input the amount of people in your party.` });
+  } else if (status === 'seated' || status === 'finished') {
+    next({ status: 400, message: `Status cannot be seated or finished` });
   }
 
   const reservation = {
@@ -142,6 +184,23 @@ async function read(request, response) {
 }
 
 /**
+ * Update function
+ *  updates a reservation with the proper data from request 
+ * @param {request}
+ *  request from client
+ * @param {response}
+ *  response from the server  
+ * @returns {JSON}
+ *  and updated reservation
+ */
+ async function update(request, response) {
+  const { reservation_id } = response.locals.reservation;
+  const { status } = request.body.data;
+  const reservation = await reservationsService.update(reservation_id, status);
+  response.status(200).json({ data: reservation });
+}
+
+/**
  * List function
  *  show a list of all reservations in the db
  * @param {request} 
@@ -153,12 +212,14 @@ async function read(request, response) {
  */
 async function list(request, response) {
   const date = request.query.date;
-  const data = await reservationsService.list(date);
-  response.json({ data });
+  const reservations = await reservationsService.list(date);
+  const filtered = reservations.filter((reservation) => reservation.status !== 'finished');
+  response.json({ data: filtered });
 }
 
 module.exports = {
-  create: [asyncErrorBoundary(createReservationRequirements), asyncErrorBoundary(checkDatePast), asyncErrorBoundary(checkTime), asyncErrorBoundary(create)],
-  read: [reservationExists, asyncErrorBoundary(read)],
+  create: [createReservationRequirements, checkDatePast, checkTime, asyncErrorBoundary(create)],
+  read: [asyncErrorBoundary(reservationExists), asyncErrorBoundary(read)],
+  update: [statusValid, asyncErrorBoundary(reservationExists), updateFinished, asyncErrorBoundary(update)],
   list: [asyncErrorBoundary(list)],
 };

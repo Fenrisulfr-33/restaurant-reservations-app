@@ -24,8 +24,24 @@ function create(newReservation) {
  */
 function read(reservation_id) {
   return knex('reservations')
-      .where({ reservation_id: reservation_id})
+      .where({'reservation_id': reservation_id})
       .first();
+}
+
+/**
+ * Update function
+ *  updates a specific reservation, status only
+ * @param {reservation_id} 
+ *  the reservations id number
+ * @returns {Promise<Error/any>}}
+ *  a promise that resolve to the `json` data or an error
+ */
+ function update(reservation_id, status) {
+  return knex('reservations')
+      .where({ 'reservation_id': reservation_id })
+      .update({ 'status': status })
+      .returning('*')
+      .then(data => data[0]);
 }
 
 /**
@@ -39,15 +55,15 @@ function read(reservation_id) {
 function list(date){
   if (date) {
     return knex('reservations')
-      .where({ reservation_date: date})
+      .where('reservation_date', date)
       .orderBy('reservation_time');
   }
   return knex('reservations');
-
 }
 
 module.exports = {
   create,
   read,
+  update,
   list,
 };

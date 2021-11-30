@@ -91,6 +91,26 @@ export async function createReservation(reservation, signal) {
 }
 
 /**
+ * updates a reservation to change the status
+ * @param {reservation_id}
+ *  the reservation_id to fill in
+ * @param {signal} 
+ *  a signal for if the user cancels the request
+ * @returns 
+ *  a promise that comes back resolved or with an error
+ */
+ export async function updateReservation(reservation_id, status, signal) { 
+  const url = new URL(`${API_BASE_URL}/reservations/${reservation_id}/status`); 
+  const options = { 
+    method: "PUT", 
+    headers, 
+    body: JSON.stringify({ data: { status: status} }), 
+    signal,
+  }; 
+  return await fetchJson(url, options, {});
+}
+
+/**
  * List all tables in the db
  * @param {signal} 
  *  a signal for if the user cancels the request
@@ -138,14 +158,14 @@ export async function createReservation(reservation, signal) {
   const options = { 
     method: "PUT", 
     headers, 
-    body: JSON.stringify({ data: reservation_id }), 
+    body: JSON.stringify({ data: { reservation_id } }), 
     signal,
   }; 
   return await fetchJson(url, options, {});
 }
 
 /**
- * deletes the reservation number from the table
+ * deletes the reservation number from the table object
  * @param {table_id} 
  *  the table id to update
  * @param {signal} 
@@ -153,7 +173,7 @@ export async function createReservation(reservation, signal) {
  * @returns 
  *  a promise that comes back resolved or with an error
  */
- export async function deleteReservation(table_id, signal) { 
+ export async function freeTable(table_id, signal) { 
   const url = new URL(`${API_BASE_URL}/tables/${table_id}/seat`); 
   const options = { method: "DELETE", signal }; 
   return await fetchJson(url, options);
