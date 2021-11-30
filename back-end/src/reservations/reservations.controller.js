@@ -212,9 +212,18 @@ async function read(request, response) {
  */
 async function list(request, response) {
   const date = request.query.date;
-  const reservations = await reservationsService.list(date);
-  const filtered = reservations.filter((reservation) => reservation.status !== 'finished');
-  response.json({ data: filtered });
+  const mobile = request.query.mobile_number;
+  if (date) {
+    const reservations = await reservationsService.list(date);
+    const filtered = reservations.filter((reservation) => reservation.status !== 'finished');
+    response.json({ data: filtered });
+  } else if (mobile) {
+    const reservations = await reservationsService.search(mobile);
+    response.json({ data: reservations });
+  } else {
+    const anchor = await reservationsService.list(date);
+    response.json({ data: anchor });
+  }
 }
 
 module.exports = {

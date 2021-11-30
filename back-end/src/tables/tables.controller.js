@@ -181,12 +181,3 @@ module.exports = {
     finish: [asyncErrorBoundary(tableExists), asyncErrorBoundary(isNotOccupied), asyncErrorBoundary(destroy)],
     list: [asyncErrorBoundary(list)],
 };
-
-
-
-
-
-
-
-
-

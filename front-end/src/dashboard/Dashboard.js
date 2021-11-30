@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
-import { listReservations, listTables, freeTable, updateReservation } from "../utils/api";
+import { listReservations, listTables, freeTable } from "../utils/api";
 import { next, previous, today } from '../utils/date-time'
 import ErrorAlert from "../layout/ErrorAlert";
 import ReservationList from "./ReservationList";
@@ -46,27 +46,23 @@ function Dashboard({ date }) {
     const ac = new AbortController();
     freeTable(table.table_id, ac.signal)
     .then(loadDashboard)
-    // .then(loadTables)
     .catch(setReservationsError);
   }
 
   return (
     <main>
-      <h1>Dashboard</h1>
-      <div className="d-md-flex mb-3">
-        <h4 className="mb-0">Reservations for date</h4>
-      </div>
+      <h1>Reservations by date</h1>
       <ErrorAlert error={reservationsError} />
       <ErrorAlert error={tablesError} />
-      <nav>
+      <nav className='btn-group mb-2'>
         <Link to={`/dashboard?date=${previous(date)}`}>
-          <button>Previous</button>
+          <button className='btn btn-secondary'>Previous</button>
         </Link>
         <Link to={`/dashboard?date=${today()}`}>
-          <button>Today</button>
+          <button className='btn btn-primary ml-2'>Today</button>
         </Link>
         <Link to={`/dashboard?date=${next(date)}`}>
-          <button>Next</button>
+          <button className='btn btn-secondary ml-2'>Next</button>
         </Link>
       </nav>
       <ReservationList reservations={reservations} date={date}/>

@@ -1,4 +1,3 @@
-
 import { useHistory } from 'react-router-dom';
 
 /**
@@ -8,7 +7,7 @@ import { useHistory } from 'react-router-dom';
  * @returns 
  *  a row with the reservation data
  */
- function Table({ table, finish }) {
+ export default function Table({ table, finish }) {
     const history = useHistory();
     async function handleFinish(event) {
         const result = window.confirm(`Is this table ready to seat new guests? This cannot be undone`);
@@ -17,10 +16,14 @@ import { useHistory } from 'react-router-dom';
             history.push('/');
         }
     }
+    let color = '';
+    if (table.reservation_id) {
+        color = 'table-danger';
+    }
 
     return (
-        <tr>
-            <td>{table.table_id}</td>
+        <tr className={color}>
+            <th scope='row'>{table.table_id}</th>
             <td>{table.table_name}</td>
             <td>{table.capacity}</td>
             <td data-table-id-status={table.table_id}>{table.reservation_id ? 'Occupied' : 'Free'}</td>
@@ -38,5 +41,3 @@ import { useHistory } from 'react-router-dom';
         </tr>
     )
 }
-
-export default Table;

@@ -61,9 +61,27 @@ function list(date){
   return knex('reservations');
 }
 
+/**
+ * Search function
+ *  list all reservations by a specific phone number
+ * @param {mobile_number}
+ *  the mobile number being searched 
+ * @returns 
+ *  a promise that resolves to the `json` data or an error
+ */
+function search(mobile_number) {
+  return knex("reservations")
+    .whereRaw(
+      "translate(mobile_number, '() -', '') like ?",
+      `%${mobile_number.replace(/\D/g, "")}%`
+    )
+    .orderBy("reservation_date");
+}
+
 module.exports = {
   create,
   read,
   update,
   list,
+  search,
 };
