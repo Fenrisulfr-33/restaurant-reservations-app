@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom"
 import { useHistory } from "react-router";
-import { listTables, updateTable } from "../utils/api";
+import { listTables, updateReservation, updateTable } from "../utils/api";
 import TablesDropDown from "./TablesDropDown";
 import ErrorAlert from '../layout/ErrorAlert';
 
@@ -10,15 +10,9 @@ function SeatForm() {
     // set the tables list
     const [tables, setTables] = useState([]);
     const [tablesError, setTablesError] = useState(null);
+    const [tableId, setTableId] = useState('');
     // grab the reservation id from params
-    const reservation_id = useParams();
-    const initalFormData = {
-        table_id: '',
-        table_name: '',
-        capacity: '',
-        reservation_id: reservation_id,
-    };
-    const [table, setTable] = useState({ ...initalFormData });
+    const { reservation_id } = useParams();
     // load form
     useEffect(loadForm, []);
     // grab list of tables
@@ -34,18 +28,16 @@ function SeatForm() {
         history.goBack();
     }
     // when selected changes adjust value
-    const handleChange = ({ target: { name, value } }) => {
-        setTable({
-            ...table,
-            [name]: value,
-        });
+    const handleChange = ({ target: { value } }) => {
+        setTableId(value);
     }
     // on submit return the user to the dashboard and shows their reservations
     const submitHandler = async (event) => {
         event.preventDefault();
         const ac = new AbortController();
         try {
-            await updateTable(table.table_id, reservation_id, ac.signal);
+            await updateTable(tableId, reservation_id, ac.signal);
+            await updateReservation(reservation_id, 'seated', ac.signal);
             history.push(`/dashboard`);
         } catch (error) {
             setTablesError(error);
@@ -53,7 +45,6 @@ function SeatForm() {
     }
     // map tables for selected
     const list = tables.map((obj) => <TablesDropDown key={obj.table_id} table={obj} />);
-
     return (
         <>
             <div>   
@@ -67,6 +58,7 @@ function SeatForm() {
                     required
                     onChange={handleChange}
                 >
+                    <option valeue=''>Select a table</option>
                     {list}
                 </select>
                 <button

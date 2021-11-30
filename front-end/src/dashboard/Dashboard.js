@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
-import { deleteReservation, listReservations, listTables } from "../utils/api";
+import { listReservations, listTables, freeTable, updateReservation } from "../utils/api";
 import { next, previous, today } from '../utils/date-time'
 import ErrorAlert from "../layout/ErrorAlert";
 import ReservationList from "./ReservationList";
@@ -27,12 +27,11 @@ function Dashboard({ date }) {
     listReservations({ date }, ac.signal)
       .then(setReservations)
       .catch(setReservationsError);
-    listTables()
-      .then(setTables);
+    listTables().then(setTables);
     return () => ac.abort();
   }
 
-  useEffect(loadTables, [setTables]);
+  useEffect(loadTables, []);
 
   function loadTables() {
     const ac = new AbortController();
@@ -43,10 +42,11 @@ function Dashboard({ date }) {
     return () => ac.abort();
   }
 
-  function finish(table_id) {
+  function finish(table) {
     const ac = new AbortController();
-    deleteReservation(table_id, ac.signal)
+    freeTable(table.table_id, ac.signal)
     .then(loadDashboard)
+    // .then(loadTables)
     .catch(setReservationsError);
   }
 
@@ -57,6 +57,7 @@ function Dashboard({ date }) {
         <h4 className="mb-0">Reservations for date</h4>
       </div>
       <ErrorAlert error={reservationsError} />
+      <ErrorAlert error={tablesError} />
       <nav>
         <Link to={`/dashboard?date=${previous(date)}`}>
           <button>Previous</button>

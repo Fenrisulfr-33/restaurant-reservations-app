@@ -66,22 +66,20 @@ async function validateUpdate(request, response, next) {
         next({ status: 400, message: `data is missing.` });
     }
     const { reservation_id } = request.body.data;
-    // check for reservation id 
     if (!reservation_id || reservation_id === '') {
         next({ status: 400, message: `reservation_id is missing.` });
     }
     const table = response.locals.table;
-    // if the table reservation id is not null the table is occupied
-    if (table.reservation_id){
-        next({ status: 400, message: 'Table is occupied.' });
-    }
-    // if the table isnt occupied make sure the reservation is in the d
-    const reservation = await reservationsService.read( reservation_id );
+    const reservation = await reservationsService.read(reservation_id);
     if (!reservation) {
         next({ status: 404, message: `No reservation matces ${reservation_id}.` });
     } else if (reservation.people > table.capacity) {
         next({ status: 400, message: 'The capacity of the table is not big enough for your party.' });
-    }  
+    } else if (reservation.status === 'seated') {
+        next({ status: 400, message: `Reservation is already seated.` });
+    } else if (table.reservation_id){
+        next({ status: 400, message: 'Table is occupied.' });
+    }
 
     next();
 }
@@ -137,9 +135,10 @@ async function read(request, response) {
  *  and updated table
  */
 async function update(request, response) {
+    const { table_id } = response.locals.table;
     const { reservation_id } = request.body.data;
-    const { table_id } = response.locals.table
     const data = await tablesService.update(table_id, reservation_id);
+    await reservationsService.update(reservation_id, 'seated');
     response.status(200).json({ data });
 }
 
@@ -154,8 +153,9 @@ async function update(request, response) {
  *  a deleted status
  */
  async function destroy(request, response) {
-    const { table_id } = response.locals.table;
+    const { table_id, reservation_id } = response.locals.table;
     await tablesService.delete(table_id);
+    await reservationsService.update(reservation_id, 'finished');
     response.sendStatus(200);
 }
 
@@ -178,7 +178,7 @@ module.exports = {
     create: [createTableRequirements, asyncErrorBoundary(create)],
     read: [asyncErrorBoundary(tableExists), asyncErrorBoundary(read)],
     update: [asyncErrorBoundary(tableExists), asyncErrorBoundary(validateUpdate), asyncErrorBoundary(update)],
-    finish: [asyncErrorBoundary(tableExists), asyncErrorBoundary(isNotOccupied),asyncErrorBoundary(destroy)],
+    finish: [asyncErrorBoundary(tableExists), asyncErrorBoundary(isNotOccupied), asyncErrorBoundary(destroy)],
     list: [asyncErrorBoundary(list)],
 };
 
