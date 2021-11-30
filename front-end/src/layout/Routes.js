@@ -7,6 +7,7 @@ import { today } from "../utils/date-time";
 import useQuery from '../utils/useQuery';
 import Tables from "../tables/Tables";
 import SeatForm from "../seats/SeatForm";
+import SearchPage from "../search/SearchPage";
 
 /**
  * Defines all the routes for the application.
@@ -18,6 +19,7 @@ import SeatForm from "../seats/SeatForm";
 function Routes() {
   const query = useQuery();
   const date = query.get('date');
+  const mobile = query.get('mobile_number');
 
   return (
     <Switch>
@@ -35,6 +37,9 @@ function Routes() {
       </Route>
       <Route path='/reservations/:reservation_id/seat'>
         <SeatForm />
+      </Route>
+      <Route path='/search'>
+        <SearchPage />
       </Route>
       <Route>
         <NotFound />

@@ -8,10 +8,16 @@ import Reservation from "./Reservation"
  *  a table with a list of rows
  */
 function ReservationList({ reservations, date }) {
-    // filter the reservations list for the current date
-    const findDate = reservations.filter((obj) => obj.reservation_date === date);
-    // map that list with reservation components
-    const listByDate = findDate.map((obj) => <Reservation key={obj.reservation_id} reservation={obj} />);
+    let list;
+    if (date) {
+        // filter the reservations list for the current date
+        const findDate = reservations.filter((obj) => obj.reservation_date === date);
+        // map that list with reservation components
+        list = findDate.map((obj) => <Reservation key={obj.reservation_id} reservation={obj} />);
+    } else {
+        // list made up of reservations by mobile number if date does not exist
+        list = reservations.map((reservation) => <Reservation key={reservation.reservation_id} reservation={reservation} />)
+    }
     // table with the rows being the map
     return (
         <table className='table'>
@@ -29,7 +35,7 @@ function ReservationList({ reservations, date }) {
                 </tr>
             </thead> 
             <tbody>
-                {listByDate}
+                {list}
             </tbody>
         </table>
     )
