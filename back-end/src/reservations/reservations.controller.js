@@ -16,7 +16,7 @@ const reservationsService = require("./reservations.service");
  */
  function statusValid(request, response, next){
   const { status } = request.body.data;
-  const valid = ['booked', 'seated', 'finished'];
+  const valid = ['booked', 'seated', 'finished', 'cancelled'];
   if (!valid.includes(status)){
     return next({ status: 400, message: `Thet status you are requesting is unknown` });
   }
@@ -76,7 +76,7 @@ async function reservationExists(request, response, next) {
  *  a reservation object in locals with proper values
  */
 function createReservationRequirements(request, response, next){
-  const { data: { first_name, last_name, mobile_number, reservation_date, reservation_time, people, status } = {} } = request.body;
+  const { data: { reservation_id, first_name, last_name, mobile_number, reservation_date, reservation_time, people, status } = {} } = request.body;
   const time = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$/;
   if (!first_name || first_name === '') {
     next({ status: 400, message: `To submit a reservation, input a first_name.` });
@@ -95,6 +95,7 @@ function createReservationRequirements(request, response, next){
   }
 
   const reservation = {
+    reservation_id,
     first_name,
     last_name,
     mobile_number,
@@ -154,8 +155,7 @@ function checkTime(request, response, next){
 /* CRUDL functions */
 
 /**
- * Create function
- *  create a reservation that fufills all the key requirements 
+ *  Creates a reservation that fufills all the key requirements 
  * @param {request}
  *  request to server
  * @param {response}
@@ -169,8 +169,7 @@ async function create(request, response){
 }
 
 /**
- * Read function
- *  reads an individual reservation based upon id 
+ *  Reads an individual reservation based upon id 
  * @param {request}
  *  request to server
  * @param {response}
@@ -184,8 +183,23 @@ async function read(request, response) {
 }
 
 /**
- * Update function
- *  updates a reservation with the proper data from request 
+ *  Updates a reservation status
+ * @param {request}
+ *  request from client
+ * @param {response}
+ *  response from the server  
+ * @returns {JSON}
+ *  and updated status
+ */
+ async function status(request, response) {
+  const { reservation_id } = response.locals.reservation;
+  const { status } = request.body.data;
+  const reservation = await reservationsService.status(reservation_id, status);
+  response.status(200).json({ data: reservation });
+}
+
+/**
+ *  Updates a reservation with the proper data from request 
  * @param {request}
  *  request from client
  * @param {response}
@@ -194,15 +208,17 @@ async function read(request, response) {
  *  and updated reservation
  */
  async function update(request, response) {
-  const { reservation_id } = response.locals.reservation;
-  const { status } = request.body.data;
-  const reservation = await reservationsService.update(reservation_id, status);
-  response.status(200).json({ data: reservation });
+  const { reservation_id } = request.params;
+  const reservation = {
+    ...request.body.data,
+    reservation_id: reservation_id
+  };
+  const updated = await reservationsService.update(reservation);
+  response.status(200).json({ data: updated });
 }
 
 /**
- * List function
- *  show a list of all reservations in the db
+ *  Shows a list of all reservations in the db
  * @param {request} 
  *  a request to the server
  * @param {response} 
@@ -211,11 +227,12 @@ async function read(request, response) {
  *  a list of all reservations
  */
 async function list(request, response) {
+  const filter = ['finished', 'cancelled'];
   const date = request.query.date;
   const mobile = request.query.mobile_number;
   if (date) {
     const reservations = await reservationsService.list(date);
-    const filtered = reservations.filter((reservation) => reservation.status !== 'finished');
+    const filtered = reservations.filter((reservation) => !filter.includes(reservation.status) );
     response.json({ data: filtered });
   } else if (mobile) {
     const reservations = await reservationsService.search(mobile);
@@ -229,6 +246,7 @@ async function list(request, response) {
 module.exports = {
   create: [createReservationRequirements, checkDatePast, checkTime, asyncErrorBoundary(create)],
   read: [asyncErrorBoundary(reservationExists), asyncErrorBoundary(read)],
-  update: [statusValid, asyncErrorBoundary(reservationExists), updateFinished, asyncErrorBoundary(update)],
+  update: [asyncErrorBoundary(reservationExists), createReservationRequirements, asyncErrorBoundary(update)],
   list: [asyncErrorBoundary(list)],
+  status: [statusValid, asyncErrorBoundary(reservationExists), updateFinished, asyncErrorBoundary(status)],
 };

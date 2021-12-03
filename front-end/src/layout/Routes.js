@@ -1,13 +1,16 @@
 import React from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
-import Dashboard from "../dashboard/Dashboard";
-import NewReservation from "../newReservation/NewReservation";
-import NotFound from "./NotFound";
+/* Utilities */
 import { today } from "../utils/date-time";
 import useQuery from '../utils/useQuery';
+/* Componenets */
+import Dashboard from "../dashboard/Dashboard";
+import NewReservation from "../reservationForms/NewReservation";
+import NotFound from "./NotFound";
 import NewTable from "../newTable/NewTable";
 import SeatForm from "../seatForm/SeatForm";
 import SearchPage from "../search/SearchPage";
+import EditReservation from "../reservationForms/EditReservation";
 
 /**
  * Defines all the routes for the application.
@@ -16,7 +19,7 @@ import SearchPage from "../search/SearchPage";
  *
  * @returns {JSX.Element}
  */
-function Routes() {
+export default function Routes() {
   const query = useQuery();
   const date = query.get('date');
 
@@ -37,6 +40,9 @@ function Routes() {
       <Route path='/reservations/:reservation_id/seat'>
         <SeatForm />
       </Route>
+      <Route path='/reservations/:reservation_id/edit'>
+        <EditReservation />
+      </Route>
       <Route path='/search'>
         <SearchPage />
       </Route>
@@ -46,5 +52,3 @@ function Routes() {
     </Switch>
   );
 }
-
-export default Routes;

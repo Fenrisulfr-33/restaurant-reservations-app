@@ -1,26 +1,30 @@
 import { useState, useEffect } from "react";
-import ReservationList from "../dashboard/ReservationList";
+/* Utilities */
 import { listReservations } from '../utils/api';
+/* Components */
 import ErrorAlert from "../layout/ErrorAlert";
+import ReservationList from '../dashboard/reservationList/ReservationList';
 
 export default function SearchPage() {
+    // set an array of reservations to empty
     const [reservations, setReservations] = useState([]);
-    const [reservationsError, setReservationsError] = useState(null);
+    const [error, setError] = useState(null);
     const [mobile, setMobile] = useState('');
     const [notFound, setNotFound] = useState(false);
-
-    useEffect(loadNumbers, [mobile]);
-
-    // get the list of reservations for the day and tables list
-    function loadNumbers() {
-      const ac = new AbortController();
-      setReservationsError(null);
-      listReservations({ mobile_number: mobile }, ac.signal)
-        .then(setReservations)
-        // .then(() => setNumbers(true))
-        .catch(setReservationsError);
-      return () => ac.abort();
-    }
+    // get the list of reservations by mobile number
+    useEffect(() => {
+        const ac = new AbortController();
+        setError(null);
+        const getReservations = async () => {
+            try {
+                const reservations = await listReservations({ mobile_number: mobile }, ac.signal);
+                setReservations(reservations);
+            } catch (error) {
+    
+            }
+        }
+        getReservations();
+    }, [mobile])
 
     const handleChange = ({ target: { value } }) => {
 		setMobile(value);
@@ -34,11 +38,10 @@ export default function SearchPage() {
             const data = await listReservations({ mobile_number: mobile }, ac.signal);
             setReservations(data);
             if (reservations.length === 0) {
-                // window.alert('No reservations found');
                 setNotFound(true);
             }
         } catch (error) {
-            setReservationsError(error);
+            setError(error);
         }
     }
 
@@ -58,9 +61,9 @@ export default function SearchPage() {
                     </form>
                 </div>
             </div>
-            <ErrorAlert error={reservationsError} />
-            <div>{mobile ? <ReservationList reservations={reservations} /> : ('')}</div>
-            <div>{notFound ? (<h4>No reservations found</h4>) : ('')}</div>
+            <ErrorAlert error={error} />
+            <div>{mobile ? <ReservationList reservations={reservations} /> : ( '' )}</div>
+            <div>{notFound ? ( <h4>No reservations found</h4> ) : ( ' ')}</div>
         </main>
     )
 }

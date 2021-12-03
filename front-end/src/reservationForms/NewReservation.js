@@ -1,17 +1,14 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router";
+/* Utilities */
 import { createReservation } from "../utils/api";
+/* Components */
 import ErrorAlert from '../layout/ErrorAlert';
 
 /**
- * Defines the reservations page.
- * All feilds are required and are not-nullable
- * After submitting return to the /dashbaord page which dispalys the date of the new reservation
- * If canceled, return the user to their previous page
- * Displays error if present from the API
- * @param date
- *  the date for which the user wants to view reservations.
+ * A form for submitting a new reservation
  * @returns {JSX.Element}
+ *  an updated reservations list
  */
 export default function NewReservation() {
     // grab the users history
@@ -52,6 +49,7 @@ export default function NewReservation() {
             setError(error);
         }
     }
+    
     return (
         <main>
             <h1>Create a new reservation</h1>
