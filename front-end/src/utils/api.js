@@ -59,7 +59,6 @@ async function fetchJson(url, options, onCancel) {
  * @returns {Promise<[reservation]>}
  *  a promise that resolves to a possibly empty array of reservation saved in the database.
  */
-
 export async function listReservations(params, signal) {
   const url = new URL(`${API_BASE_URL}/reservations`);
   Object.entries(params).forEach(([key, value]) =>
@@ -71,8 +70,8 @@ export async function listReservations(params, signal) {
 }
 
 /**
- * Create a reservation and send it to the server
- * @param {reservation} 
+ * Retrieves a reservation from id
+ * @param {reservation_id} 
  *  obj containing the formData
  * @param {signal} 
  *  a signal for if the user cancels the request
@@ -112,16 +111,18 @@ export async function createReservation(reservation, signal) {
 }
 
 /**
- * updates a reservation to change the status
+ * Updates a reservation to change the contents
  * @param {reservation_id}
  *  the reservation_id to fill in
+ * @param {reservation}
+ *  the object containing 
  * @param {signal} 
  *  a signal for if the user cancels the request
  * @returns 
  *  a promise that comes back resolved or with an error
  */
  export async function updateReservation(reservation_id, reservation, signal) { 
-  const url = new URL(`${API_BASE_URL}/reservations/${reservation_id}/edit`); 
+  const url = new URL(`${API_BASE_URL}/reservations/${reservation_id}`); 
   const options = { 
     method: "PUT", 
     headers, 
@@ -132,9 +133,11 @@ export async function createReservation(reservation, signal) {
 }
 
 /**
- * updates a reservation to change the status
+ * Updates a reservations status
  * @param {reservation_id}
  *  the reservation_id to fill in
+ * @param {status}
+ *  the new status
  * @param {signal} 
  *  a signal for if the user cancels the request
  * @returns 
@@ -184,7 +187,7 @@ export async function createReservation(reservation, signal) {
 }
 
 /**
- * updates a table to be occupied and send it to the server
+ * Updates a table to be occupied and send it to the server
  * @param {table_id} 
  *  the table id to update
  * @param {reservation_id}
@@ -206,7 +209,7 @@ export async function createReservation(reservation, signal) {
 }
 
 /**
- * deletes the reservation number from the table object
+ * Deletes the reservation number from the table object
  * @param {table_id} 
  *  the table id to update
  * @param {signal} 

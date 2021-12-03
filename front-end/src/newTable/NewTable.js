@@ -1,17 +1,14 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router";
+/* Utilites */
 import { createTable } from "../utils/api";
+/* Componenets */
 import ErrorAlert from '../layout/ErrorAlert';
 
 /**
- * Defines the reservations page.
- * All feilds are required and are not-nullable
- * After submitting return to the /dashbaord page which dispalys the date of the new reservation
- * If canceled, return the user to their previous page
- * Displays error if present from the API
- * @param date
- *  the date for which the user wants to view reservations.
+ * A form for submitting a new table
  * @returns {JSX.Element}
+ *  a updated tables list
  */
 export default function NewTable() {
     // grab the users history
@@ -36,7 +33,7 @@ export default function NewTable() {
     const cancelHandler = () => {
         history.goBack();
     }
-    // on submit retunr the user to the dashboard and shows their reservations
+    // on submit return the user to the dashboard and shows their reservations
     const submitHandler = async (event) => {
         event.preventDefault();
         const ac = new AbortController();
@@ -48,6 +45,7 @@ export default function NewTable() {
             setError(error);
         }
     }
+    
     return (
         <main>
             <h1>Create a new table</h1>

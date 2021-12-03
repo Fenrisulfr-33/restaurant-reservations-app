@@ -1,8 +1,7 @@
 const knex = require("../db/connection");
 
 /**
- * Create function
- *  creates a new reservation
+ *  Creates a new reservation
  * @param {newReservation} 
  *  the new reservation data
  * @returns {Promise<Error/any>}}
@@ -15,8 +14,7 @@ function create(newReservation) {
 }
 
 /**
- * Read function
- *  finds a specific reservation
+ *  Finds a specific reservation
  * @param {reservation_id} 
  *  the reservation id number
  * @returns {Promise<Error/any>}}
@@ -28,11 +26,8 @@ function read(reservation_id) {
       .first();
 }
 
-
-
 /**
- * List function
- *  lists all reservations by a specific date
+ *  Lists all reservations by a specific date
  * @param {date} 
  *  the current date
  * @returns {Promise<Error/any>}}
@@ -48,10 +43,9 @@ function list(date){
 }
 
 /**
- * Update function
- *  updates a specific reservation, status only
- * @param {reservation_id} 
- *  the reservations id number
+ *  Updates a specific reservation
+ * @param {reservation} 
+ *  the reservation object
  * @returns {Promise<Error/any>}}
  *  a promise that resolve to the `json` data or an error
  */
@@ -63,8 +57,7 @@ function list(date){
 }
 
 /**
- * Search function
- *  list all reservations by a specific phone number
+ *  List all reservations by a specific phone number
  * @param {mobile_number}
  *  the mobile number being searched 
  * @returns 
@@ -80,10 +73,11 @@ function search(mobile_number) {
 }
 
 /**
- * Status function
- *  updates a specific reservation, status only
+ *  Updates a specific reservation, status only
  * @param {reservation_id} 
  *  the reservations id number
+ * @param {status} 
+ *  the new status
  * @returns {Promise<Error/any>}}
  *  a promise that resolve to the `json` data or an error
  */

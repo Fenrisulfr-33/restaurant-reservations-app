@@ -1,8 +1,7 @@
 const knex = require("../db/connection");
 
 /**
- * Create function
- *  creates a new table
+ *  Creates a new table
  * @param {newTable} 
  *  the new table data
  * @returns {Promise<Error/any>}}
@@ -15,8 +14,7 @@ function create(newTable) {
 }
 
 /**
- * Read function
- *  finds a specific table
+ *  Finds a specific table
  * @param {table_id} 
  *  the tables id number
  * @returns {Promise<Error/any>}}
@@ -29,8 +27,7 @@ function read(table_id) {
 }
 
 /**
- * Update function
- *  updates a specific table reservation_id only
+ *  Updates a specific table reservation_id only
  * @param {table_id} 
  *  the table id number
  * @param {reservation_id} 
@@ -47,8 +44,9 @@ function update(table_id, reservation_id) {
 }
 
 /**
- * Delete function
- *  replaces reservation on table to null
+ *  Replaces reservation on table to null
+ * @param {table_id} 
+ *  the table id number
  * @returns {Promise<Error/any>}}
  *  a promise that resolve to the `json` data or an error
  */
@@ -59,8 +57,7 @@ function update(table_id, reservation_id) {
 }
 
 /**
- * List function
- *  list of all tables by table name
+ *  Lists of all tables by table name
  * @returns {Promise<Error/any>}}
  *  a promise that resolve to the `json` data or an error
  */

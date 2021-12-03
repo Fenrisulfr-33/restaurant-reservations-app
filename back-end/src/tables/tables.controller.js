@@ -95,8 +95,7 @@ async function isNotOccupied(request, response, next) {
 /* CRUDL functions */
 
 /**
- * Create function
- *  create a table that fufills all the key requirements 
+ *  Creates a table that fufills all the key requirements 
  * @param {request}
  *  request from client
  * @param {response}
@@ -110,8 +109,7 @@ async function create(request, response) {
 }
 
 /**
- * Read function
- *  find a table base upon its id 
+ *  Finds a table base upon its id 
  * @param {request}
  *  request from client
  * @param {response}
@@ -125,8 +123,7 @@ async function read(request, response) {
 }
 
 /**
- * Update function
- *  updates a table with the proper data from request 
+ *  Updates a table with the proper data from request 
  * @param {request}
  *  request from client
  * @param {response}
@@ -143,8 +140,7 @@ async function update(request, response) {
 }
 
 /**
- * Destroy function
- *  sets reservations back to null 
+ *  Sets reservations back to null 
  * @param {request}
  *  request from client
  * @param {response}
@@ -160,7 +156,6 @@ async function update(request, response) {
 }
 
 /**
- * List function
  *  lists the tables in order of table name 
  * @param {request}
  *  request from client

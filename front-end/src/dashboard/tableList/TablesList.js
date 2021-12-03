@@ -2,8 +2,8 @@ import Table from "./Table"
 
 /**
  * 
- * @props {reservations, date}
- *  reservations list of objs, and todays date  
+ * @props {tables, finish}
+ *  ra list of table objs, a finish function 
  * @returns {JSX.Element}
  *  a table with a list of rows
  */

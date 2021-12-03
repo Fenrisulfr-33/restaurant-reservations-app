@@ -1,62 +1,18 @@
 [
     {
-        "table_name": "Angel Falls",
+        "table_name": "Bar #1",
         "capacity": 1
     },
     {
-        "table_name": "Victoria Falls",
+        "table_name": "Bar #2",
         "capacity": 1
     },
     {
-        "table_name": "Niagara Falls",
-        "capacity": 8
-    },
-    {
-        "table_name": "Yosemite Falls",
-        "capacity": 8
-    },
-    {
-        "table_name": "Iguaza Falls",
-        "capacity": 4
-    },
-    {
-        "table_name": "Gulfoss",
-        "capacity": 4
-    },
-    {
-        "table_name": "Kaieteur Falls",
+        "table_name": "#1",
         "capacity": 6
     },
     {
-        "table_name": "Tugela Falls",
-        "capacity": 10
-    },
-    {
-        "table_name": "Kunchikal Falls",
-        "capacity": 8
-    },
-    {
-        "table_name": "Ban Gioc",
-        "capacity": 2
-    },
-    {
-        "table_name": "Jog Falls",
-        "capacity": 2
-    },
-    {
-        "table_name": "Rhine Falls",
-        "capacity": 4
-    },
-    {
-        "table_name": "Browne Falls",
-        "capacity": 8
-    },
-    {
-        "table_name": "Dudhsagar Falls",
-        "capacity": 8
-    },
-    {
-        "table_name": "Bigar Cascade Falls",
-        "capacity": 10
+        "table_name": "#2",
+        "capacity": 6
     }
 ]

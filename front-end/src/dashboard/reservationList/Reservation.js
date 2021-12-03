@@ -1,15 +1,12 @@
 import { useHistory } from "react-router";
 
 /**
- * 
- * @param {reservation}
- *  a reservation object 
- * @param {cancel}
- *  onClick cancels a reservation and reloads the dash 
- * @returns 
+ * @props {reservation, cancel}
+ *  reservations obj, cancel function 
+ * @returns {JSX.Element}
  *  a row with the reservation data
  */
-export default function Reservation({reservation, cancel }) {
+export default function Reservation({ reservation, cancel }) {
     const history = useHistory();
     // change row color based upon status
     let color = '';
@@ -19,6 +16,10 @@ export default function Reservation({reservation, cancel }) {
         color = 'table-success';
     }
 
+    /**
+     * @returns {JSX}
+     *  an updated reservations list
+     */
     const handleCancel = async (event) => {
         const result = window.confirm('Do you want to cancel this reservation? This cannot be undone.');
         if (result) {
@@ -39,37 +40,15 @@ export default function Reservation({reservation, cancel }) {
             <td data-reservation-id-status={reservation.reservation_id}>{reservation.status}</td>
             <td>
             {reservation.status === 'booked' ?
-                (
-                    <a className="btn btn-primary"
-                    href={`/reservations/${reservation.reservation_id}/seat`}>
-                    Seat
-                    </a>
-                ) : (
-                    ''
-                )}
+                ( <a className="btn btn-primary" href={`/reservations/${reservation.reservation_id}/seat`}>Seat</a> ) : ( '' )}
             </td>
             <td>
             {reservation.status === 'booked' ?
-                (
-                    <a className="btn btn-secondary"
-                    href={`/reservations/${reservation.reservation_id}/edit`}>
-                    Edit
-                    </a>
-                ) : (
-                    ''
-                )}
+                ( <a className="btn btn-secondary"href={`/reservations/${reservation.reservation_id}/edit`}>Edit</a> ) : ( '' )}
             </td>
             <td>
             {reservation.status === 'booked' ?
-                (
-                    <button className="btn btn-secondary"
-                    data-reservationid-cancel={reservation.reservation_id}
-                    onClick={handleCancel}>
-                    Cancel
-                    </button>
-                ) : (
-                    ''
-                )}
+                ( <button className="btn btn-secondary" data-reservation-id-cancel={reservation.reservation_id} onClick={handleCancel}>Cancel</button> ) : ( '' )}
             </td>
         </tr>
     )

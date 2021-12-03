@@ -1,4 +1,3 @@
-const { as } = require("../db/connection");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 const reservationsService = require("./reservations.service");
 
@@ -156,8 +155,7 @@ function checkTime(request, response, next){
 /* CRUDL functions */
 
 /**
- * Create function
- *  create a reservation that fufills all the key requirements 
+ *  Creates a reservation that fufills all the key requirements 
  * @param {request}
  *  request to server
  * @param {response}
@@ -171,8 +169,7 @@ async function create(request, response){
 }
 
 /**
- * Read function
- *  reads an individual reservation based upon id 
+ *  Reads an individual reservation based upon id 
  * @param {request}
  *  request to server
  * @param {response}
@@ -186,14 +183,13 @@ async function read(request, response) {
 }
 
 /**
- * Status function
- *  updates a reservation with the proper data from request 
+ *  Updates a reservation status
  * @param {request}
  *  request from client
  * @param {response}
  *  response from the server  
  * @returns {JSON}
- *  and updated reservation
+ *  and updated status
  */
  async function status(request, response) {
   const { reservation_id } = response.locals.reservation;
@@ -203,8 +199,7 @@ async function read(request, response) {
 }
 
 /**
- * Update function
- *  updates a reservation with the proper data from request 
+ *  Updates a reservation with the proper data from request 
  * @param {request}
  *  request from client
  * @param {response}
@@ -223,8 +218,7 @@ async function read(request, response) {
 }
 
 /**
- * List function
- *  show a list of all reservations in the db
+ *  Shows a list of all reservations in the db
  * @param {request} 
  *  a request to the server
  * @param {response} 

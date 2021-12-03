@@ -4,14 +4,9 @@ import { listReservation, updateReservation } from "../utils/api";
 import ErrorAlert from '../layout/ErrorAlert';
 
 /**
- * Defines the reservations page.
- * All feilds are required and are not-nullable
- * After submitting return to the /dashbaord page which dispalys the date of the new reservation
- * If canceled, return the user to their previous page
- * Displays error if present from the API
- * @param date
- *  the date for which the user wants to view reservations.
+ * DA form for editing a current reservation
  * @returns {JSX.Element}
+ *  a updated reservation in the list
  */
 export default function EditReservation() {
     // grab the users history
@@ -31,29 +26,27 @@ export default function EditReservation() {
     };
     // set the formData
     const [formData, setFormData] = useState({ ...initalFormData });
-
-      useEffect(() => {
-        const getReservation = async () => {
-          const ac = new AbortController();
-          try {
-            const reservation = await listReservation(reservation_id, ac.signal);
-            const { first_name, last_name, mobile_number, reservation_date, reservation_time, people } = reservation;
-            console.log(reservation);
-            setFormData({
-              first_name,
-              last_name,
-              mobile_number,
-              reservation_date,
-              reservation_time,
-              people
-            })
-          } catch (error) {
-            setError(error);
-          }
+    // get the reservation info to prefill the form
+    useEffect(() => {
+    const getReservation = async () => {
+        const ac = new AbortController();
+        try {
+        const reservation = await listReservation(reservation_id, ac.signal);
+        const { first_name, last_name, mobile_number, reservation_date, reservation_time, people } = reservation;
+        setFormData({
+            first_name,
+            last_name,
+            mobile_number,
+            reservation_date,
+            reservation_time,
+            people
+        })
+        } catch (error) {
+        setError(error);
         }
-        getReservation();
-      }, [reservation_id])
-
+    }
+    getReservation();
+    }, [reservation_id])
     // change handler for keeping the current text on screen
     const changeHandler = ({ target: { name, value } }) => {
         setFormData({
@@ -71,7 +64,7 @@ export default function EditReservation() {
         const ac = new AbortController();
         try {
             formData.people = Number(formData.people);
-            await updateReservation(formData, ac.signal);
+            await updateReservation(reservation_id, formData, ac.signal);
             history.push(`/dashboard?date=${formData.reservation_date}`);
         } catch (error) {
             setError(error);

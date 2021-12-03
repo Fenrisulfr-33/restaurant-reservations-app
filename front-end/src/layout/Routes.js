@@ -1,10 +1,12 @@
 import React from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
+/* Utilities */
 import { today } from "../utils/date-time";
+import useQuery from '../utils/useQuery';
+/* Componenets */
 import Dashboard from "../dashboard/Dashboard";
 import NewReservation from "../reservationForms/NewReservation";
 import NotFound from "./NotFound";
-import useQuery from '../utils/useQuery';
 import NewTable from "../newTable/NewTable";
 import SeatForm from "../seatForm/SeatForm";
 import SearchPage from "../search/SearchPage";
@@ -17,7 +19,7 @@ import EditReservation from "../reservationForms/EditReservation";
  *
  * @returns {JSX.Element}
  */
-function Routes() {
+export default function Routes() {
   const query = useQuery();
   const date = query.get('date');
 
@@ -50,5 +52,3 @@ function Routes() {
     </Switch>
   );
 }
-
-export default Routes;

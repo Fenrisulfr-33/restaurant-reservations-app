@@ -2,12 +2,12 @@ import Reservation from "./Reservation";
 
 /**
  * 
- * @props {reservations, date}
- *  reservations list of objs, and todays date  
+ * @props {reservations, date, cancel}
+ *  reservations list of objs, and todays date, cancel function
  * @returns {JSX.Element}
  *  a table with a list of rows
  */
-function ReservationList({ reservations, date, cancel }) {
+export default function ReservationList({ reservations, date, cancel }) {
     let list;
     if (date) {
         // filter the reservations list for the current date
@@ -42,5 +42,3 @@ function ReservationList({ reservations, date, cancel }) {
         </table>
     )
 }
-
-export default ReservationList

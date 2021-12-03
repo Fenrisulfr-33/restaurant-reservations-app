@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom"
 import { useHistory } from "react-router";
+/* Utilities */
 import { listTables, updateReservationStatus, updateTable } from "../utils/api";
+/* Components */
 import TablesDropDown from "./TablesDropDown";
 import ErrorAlert from '../layout/ErrorAlert';
 
@@ -9,20 +11,23 @@ export default function SeatForm() {
     const history = useHistory();
     // set the tables list
     const [tables, setTables] = useState([]);
-    const [tablesError, setTablesError] = useState(null);
+    const [error, setError] = useState(null);
     const [tableId, setTableId] = useState('');
     // grab the reservation id from params
     const { reservation_id } = useParams();
     // load form
-    useEffect(loadForm, []);
-    // grab list of tables
-    function loadForm() {
-      const abortController = new AbortController();
-      listTables(abortController.signal)
-        .then(setTables)
-        .catch(setTablesError);
-      return () => abortController.abort();
-    }
+    useEffect(() => {
+        const ac = new AbortController();
+        const getTables = async () => {
+            try {
+                const tables = await listTables(ac.signal);
+                setTables(tables)
+            } catch (error) {
+                setError(error)
+            }
+        }
+        getTables();
+    }, [])
     // when canceled go back to the users previous page
     const cancelHandler = () => {
         history.goBack();
@@ -40,17 +45,18 @@ export default function SeatForm() {
             await updateReservationStatus(reservation_id, 'seated', ac.signal);
             history.push(`/dashboard`);
         } catch (error) {
-            setTablesError(error);
+            setError(error);
         }
     }
     // map tables for selected
     const list = tables.map((obj) => <TablesDropDown key={obj.table_id} table={obj} />);
+
     return (
         <>
             <div>   
                 Seat Form
             </div>
-            <ErrorAlert error={tablesError} />
+            <ErrorAlert error={error} />
             <form onSubmit={submitHandler}>
                 <select className="form-select" 
                     aria-label="Default select example"
