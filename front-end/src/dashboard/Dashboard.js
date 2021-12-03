@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
-import { listReservations, listTables, freeTable } from "../utils/api";
+import { listReservations, listTables, freeTable, updateReservationStatus } from "../utils/api";
 import { next, previous, today } from '../utils/date-time'
 import ErrorAlert from "../layout/ErrorAlert";
-import ReservationList from "./ReservationList";
-import TablesList from "./TablesList";
+import ReservationList from './reservationList/ReservationList';
+import TablesList from './tableList/TablesList'
 
 /**
  * Defines the dashboard page.
@@ -27,7 +27,9 @@ function Dashboard({ date }) {
     listReservations({ date }, ac.signal)
       .then(setReservations)
       .catch(setReservationsError);
-    listTables().then(setTables);
+    listTables()
+      .then(setTables)
+      .catch(setTablesError);
     return () => ac.abort();
   }
 
@@ -42,11 +44,22 @@ function Dashboard({ date }) {
     return () => ac.abort();
   }
 
-  function finish(table) {
+  const finish = async (table) => {
     const ac = new AbortController();
-    freeTable(table.table_id, ac.signal)
-    .then(loadDashboard)
-    .catch(setReservationsError);
+    try {
+      await freeTable(table.table_id, ac.signal);
+    } catch(error) {
+      setReservationsError(error);
+    }
+  }
+
+  const cancel = async (reservation) => {
+    const ac = new AbortController();
+    try {
+      await updateReservationStatus(reservation.reservation_id, 'cancelled', ac.signal)
+    } catch (error) {
+      setReservationsError(error);
+    }
   }
 
   return (
@@ -65,7 +78,7 @@ function Dashboard({ date }) {
           <button className='btn btn-secondary ml-2'>Next</button>
         </Link>
       </nav>
-      <ReservationList reservations={reservations} date={date}/>
+      <ReservationList reservations={reservations} date={date} cancel={cancel}/>
       <TablesList tables={tables} finish={finish} />
     </main>
   );

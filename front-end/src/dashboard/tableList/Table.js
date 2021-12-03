@@ -9,10 +9,10 @@ import { useHistory } from 'react-router-dom';
  */
  export default function Table({ table, finish }) {
     const history = useHistory();
-    async function handleFinish(event) {
+    const handleFinish = async (event) => {
         const result = window.confirm(`Is this table ready to seat new guests? This cannot be undone`);
         if (result) {
-            finish(table);
+            await finish(table);
             history.push('/');
         }
     }
@@ -31,6 +31,7 @@ import { useHistory } from 'react-router-dom';
                 (
                     <button data-table-id-finish={table.table_id} 
                     className='btn btn-danger'
+                    type='button'
                     onClick={handleFinish}>
                     Finish
                    </button>

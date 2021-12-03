@@ -28,21 +28,7 @@ function read(reservation_id) {
       .first();
 }
 
-/**
- * Update function
- *  updates a specific reservation, status only
- * @param {reservation_id} 
- *  the reservations id number
- * @returns {Promise<Error/any>}}
- *  a promise that resolve to the `json` data or an error
- */
- function update(reservation_id, status) {
-  return knex('reservations')
-      .where({ 'reservation_id': reservation_id })
-      .update({ 'status': status })
-      .returning('*')
-      .then(data => data[0]);
-}
+
 
 /**
  * List function
@@ -62,6 +48,21 @@ function list(date){
 }
 
 /**
+ * Update function
+ *  updates a specific reservation, status only
+ * @param {reservation_id} 
+ *  the reservations id number
+ * @returns {Promise<Error/any>}}
+ *  a promise that resolve to the `json` data or an error
+ */
+ function update(reservation) {
+  return knex('reservations')
+      .where({ 'reservation_id': reservation.reservation_id })
+      .update(reservation, '*')
+      .then(data => data[0]);
+}
+
+/**
  * Search function
  *  list all reservations by a specific phone number
  * @param {mobile_number}
@@ -78,10 +79,27 @@ function search(mobile_number) {
     .orderBy("reservation_date");
 }
 
+/**
+ * Status function
+ *  updates a specific reservation, status only
+ * @param {reservation_id} 
+ *  the reservations id number
+ * @returns {Promise<Error/any>}}
+ *  a promise that resolve to the `json` data or an error
+ */
+ function status(reservation_id, status) {
+  return knex('reservations')
+      .where({ 'reservation_id': reservation_id })
+      .update({ 'status': status })
+      .returning('*')
+      .then(data => data[0]);
+}
+
 module.exports = {
   create,
   read,
   update,
   list,
   search,
+  status,
 };

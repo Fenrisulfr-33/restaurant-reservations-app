@@ -79,6 +79,27 @@ export async function listReservations(params, signal) {
  * @returns 
  *  a promise that comes back resolved or with an error
  */
+ export async function listReservation(reservation_id, signal) { 
+  const url = `${API_BASE_URL}/reservations/${reservation_id}`; 
+  const options = { 
+    method: "GET", 
+    headers,
+    signal, 
+  }; 
+  return await fetchJson(url, options, reservation_id)
+    .then(formatReservationDate)
+    .then(formatReservationTime);
+}
+
+/**
+ * Create a reservation and send it to the server
+ * @param {reservation} 
+ *  obj containing the formData
+ * @param {signal} 
+ *  a signal for if the user cancels the request
+ * @returns 
+ *  a promise that comes back resolved or with an error
+ */
 export async function createReservation(reservation, signal) { 
   const url = `${API_BASE_URL}/reservations`; 
   const options = { 
@@ -99,12 +120,32 @@ export async function createReservation(reservation, signal) {
  * @returns 
  *  a promise that comes back resolved or with an error
  */
- export async function updateReservation(reservation_id, status, signal) { 
+ export async function updateReservation(reservation_id, reservation, signal) { 
+  const url = new URL(`${API_BASE_URL}/reservations/${reservation_id}/edit`); 
+  const options = { 
+    method: "PUT", 
+    headers, 
+    body: JSON.stringify({ data: reservation }), 
+    signal,
+  }; 
+  return await fetchJson(url, options, reservation);
+}
+
+/**
+ * updates a reservation to change the status
+ * @param {reservation_id}
+ *  the reservation_id to fill in
+ * @param {signal} 
+ *  a signal for if the user cancels the request
+ * @returns 
+ *  a promise that comes back resolved or with an error
+ */
+ export async function updateReservationStatus(reservation_id, status, signal) { 
   const url = new URL(`${API_BASE_URL}/reservations/${reservation_id}/status`); 
   const options = { 
     method: "PUT", 
     headers, 
-    body: JSON.stringify({ data: { status: status} }), 
+    body: JSON.stringify({ data: { status: status } }), 
     signal,
   }; 
   return await fetchJson(url, options, {});

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom"
 import { useHistory } from "react-router";
-import { listTables, updateReservation, updateTable } from "../utils/api";
+import { listTables, updateReservationStatus, updateTable } from "../utils/api";
 import TablesDropDown from "./TablesDropDown";
 import ErrorAlert from '../layout/ErrorAlert';
 
@@ -27,7 +27,7 @@ export default function SeatForm() {
     const cancelHandler = () => {
         history.goBack();
     }
-    // when selected changes adjust value
+    // when selected changes adjust value 
     const handleChange = ({ target: { value } }) => {
         setTableId(value);
     }
@@ -37,7 +37,7 @@ export default function SeatForm() {
         const ac = new AbortController();
         try {
             await updateTable(tableId, reservation_id, ac.signal);
-            await updateReservation(reservation_id, 'seated', ac.signal);
+            await updateReservationStatus(reservation_id, 'seated', ac.signal);
             history.push(`/dashboard`);
         } catch (error) {
             setTablesError(error);

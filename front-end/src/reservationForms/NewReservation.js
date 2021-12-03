@@ -52,6 +52,7 @@ export default function NewReservation() {
             setError(error);
         }
     }
+    
     return (
         <main>
             <h1>Create a new reservation</h1>

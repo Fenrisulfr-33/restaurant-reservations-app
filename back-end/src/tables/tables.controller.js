@@ -138,7 +138,7 @@ async function update(request, response) {
     const { table_id } = response.locals.table;
     const { reservation_id } = request.body.data;
     const data = await tablesService.update(table_id, reservation_id);
-    await reservationsService.update(reservation_id, 'seated');
+    await reservationsService.status(reservation_id, 'seated');
     response.status(200).json({ data });
 }
 
@@ -155,7 +155,7 @@ async function update(request, response) {
  async function destroy(request, response) {
     const { table_id, reservation_id } = response.locals.table;
     await tablesService.delete(table_id);
-    await reservationsService.update(reservation_id, 'finished');
+    await reservationsService.status(reservation_id, 'finished');
     response.sendStatus(200);
 }
 

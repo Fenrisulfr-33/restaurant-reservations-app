@@ -1,4 +1,4 @@
-import Reservation from "./Reservation"
+import Reservation from "./Reservation";
 
 /**
  * 
@@ -7,16 +7,16 @@ import Reservation from "./Reservation"
  * @returns {JSX.Element}
  *  a table with a list of rows
  */
-function ReservationList({ reservations, date }) {
+function ReservationList({ reservations, date, cancel }) {
     let list;
     if (date) {
         // filter the reservations list for the current date
         const findDate = reservations.filter((obj) => obj.reservation_date === date);
         // map that list with reservation components
-        list = findDate.map((obj) => <Reservation key={obj.reservation_id} reservation={obj} />);
+        list = findDate.map((obj) => <Reservation key={obj.reservation_id} reservation={obj} cancel={cancel} />);
     } else {
         // list made up of reservations by mobile number if date does not exist
-        list = reservations.map((reservation) => <Reservation key={reservation.reservation_id} reservation={reservation} />)
+        list = reservations.map((reservation) => <Reservation key={reservation.reservation_id} reservation={reservation} cancel={cancel} />)
     }
     // table with the rows being the map
     return (
@@ -32,6 +32,8 @@ function ReservationList({ reservations, date }) {
                     <th scope='col'>People</th>
                     <th scope='col'>Status</th>
                     <th scope='col'>Seat</th>
+                    <th scope='col'>Edit</th>
+                    <th scope='col'>Cancel</th>
                 </tr>
             </thead> 
             <tbody>
